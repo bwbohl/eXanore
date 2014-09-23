@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<meta xmlns="http://exist-db.org/xquery/repo">
+    <description>Store API for annotatorjs.org implemented as eXist-db library.</description>
+    <author>Benjamin W. Bohl</author>
+    <website>http://www.github.com/bwbohl/eXanore</website>
+    <status>alpha</status>
+    <license>GNU-LGPL</license>
+    <copyright>true</copyright>
+    <type>library</type>
+    <target>eXanore</target>
+    <prepare>pre-install.xql</prepare>
+    <finish/>
+    <permissions user="admin" password="" group="dba" mode="rwxrwxr--"/>
+</meta>
