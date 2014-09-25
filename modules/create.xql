@@ -6,7 +6,7 @@
  : 
  : ## Description & License
  : 
- : This file creates a MEI file in eXist-db according to submitted parameters
+ : This file creates a XML file in eXist-db according to submitted parameters
  :
  : This program is free software: you can redistribute it and/or modify
  : it under the terms of the GNU General Public License as published by
@@ -20,40 +20,6 @@
  :
  : You should have received a copy of the GNU General Public License
  : along with this program.  If not, see <http://www.gnu.org/licenses/>.
- 
- <!-- 
-
-{
-  "id": "39fc339cf058bd22176771b3e3187329",  # unique id (added by backend)
-  "annotator_schema_version": "v1.0",        # schema version: default v1.0
-  "created": "2011-05-24T18:52:08.036814",   # created datetime in iso8601 format (added by backend)
-  "updated": "2011-05-26T12:17:05.012544",   # updated datetime in iso8601 format (added by backend)
-  "text": "A note I wrote",                  # content of annotation
-  "quote": "the text that was annotated",    # the annotated text (added by frontend)
-  "uri": "http://example.com",               # URI of annotated document (added by frontend)
-  "ranges": [                                # list of ranges covered by annotation (usually only one entry)
-    {
-      "start": "/p[69]/span/span",           # (relative) XPath to start element
-      "end": "/p[70]/span/span",             # (relative) XPath to end element
-      "startOffset": 0,                      # character offset within start element
-      "endOffset": 120                       # character offset within end element
-    }
-  ],
-  "user": "alice",                           # user id of annotation owner (can also be an object with an 'id' property)
-  "consumer": "annotateit",                  # consumer key of backend
-  "tags": [ "review", "error" ],             # list of tags (from Tags plugin)
-  "permissions": {                           # annotation permissions (from Permissions/AnnotateItPermissions plugin)
-    "read": ["group:__world__"],
-    "admin": [],
-    "update": [],
-    "delete": []
-  }
-}
-
-{"url":"http://upload.wikimedia.org/wikipedia/commons/e/e4/Hallstatt_300.jpg","l":[{"type":"rect","a":{"x":251,"width":168,"y":47,"height":124}}],"text":"my test annot","ranges":[],"quote":"","uri":"/exist/apps/edirom-SIC/index.html"}
-
--->
- 
  :)
 
 xquery version "3.0";
@@ -72,16 +38,43 @@ declare namespace mei = "http://www.music-encoding.org/ns/mei";
 declare namespace expath="http://expath.org/ns/pkg";
 declare namespace repo="http://exist-db.org/xquery/repo";
 
+(: set serialization options :)
+declare option exist:serialize "method=text media-type=text/plain";
+
 (: file information - submitted parameters :)
-declare variable $id := concat('eXanore','bla');
-declare variable $json := (:request:get-data();:)
-'{"url":"http://upload.wikimedia.org/wikipedia/commons/e/e4/Hallstatt_300.jpg","l":[{"type":"rect","a":{"x":251,"width":168,"y":47,"height":124}}],"text":"my test annot","ranges":[],"quote":"","uri":"/exist/apps/edirom-SIC/index.html"}';
+declare variable $json := request:get-parameter('data','{"key":"value"}');
+
+(: declare additional variables :)
+declare variable $id := concat('eXanore_',util:hash(string($json), "md5"));
 declare variable $xmlFromJSON := xqjson:parse-json($json);
-declare variable $xmlJSON := element root {$json};
+declare variable $readyXML := eX:makeXMLready($xmlFromJSON);
+
 (: functional variables :)
 declare variable $sourceCollectionPath := 'xmldb::exist:///db/eXanore_data/';
 declare variable $expath-descriptor := config:expath-descriptor();
-declare variable $filename := concat($id,'.xml');
+declare variable $filename := $id  || ".xml";
+
+declare function eX:addRootAttributes($filename){
+  (: TODO?  xml:id="eXanore_39fc339cf058bd22176771b3e3187320" annotator_schema_version="v1.0" created="2011-05-24T18:52:08.036814" updated="2011-05-26T12:17:05.012544" :)
+  let $file := xmldb:document($exanoreParam:dataCollectionURI || $filename)
+  let   $root := $file/json
+  let   $content := $root/*
+  return (
+    update insert element item {attribute type {'object'}, $content} into $root
+  )
+};
+
+declare function eX:makeXMLready($xml){
+  element item{
+    attribute type {'object'},
+    element pair {
+      attribute name {"id"},
+      attribute type {"string"},
+      string($id)
+    },
+    $xml/*
+  }
+};
 
 (: declare function for storing file in eXist-db :)
 declare function local:store($collection-uri,$resource-name,$contents){
@@ -92,21 +85,17 @@ declare function local:store($collection-uri,$resource-name,$contents){
   else()
 };
 
-declare function local:generateID(){
-  fn:generate-id()
+declare function eX:store(){
+  xmldb:store($exanoreParam:dataCollectionURI, $filename, $readyXML)
 };
 
-declare function local:return(){
-	local:store($sourceCollectionPath, $filename, $xmlFromJSON)
-};
-
+(: TODO file exists handling :)
 (:if(fn:doc-available(concat($sourceCollectionPath,$filename)))
 then(fn:error(fileExists,concat('a file with the spcified filename (',$filename,') already exists ')))
-else( :)
-(:  local:return():)
-(:):)
+else( :) (:  local:return():)
 
-
-xmldb:store($exanoreParam:dataCollectionURI, $filename, $xmlFromJSON)
- 
- 
+let $store := eX:store()
+let $xml := xmldb:document($exanoreParam:dataCollectionURI || $filename)/*
+return(
+  xqjson:serialize-json($xml)
+)
