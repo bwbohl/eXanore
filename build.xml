@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="xar" name="eXanore">
-    <property name="project.version" value="0.1"/>
+    <property name="project.version" value="0.1.0-alpha"/>
     <property name="project.app" value="eXanore"/>
     <property name="build.dir" value="build"/>
     <target name="xar">
