@@ -6,7 +6,7 @@
  : 
  : ## Description & License
  : 
- : This query is to implement the Annotator Store API index functionality
+ : This query is implements the Annotator Store API index functionality
  :
  : This program is free software: you can redistribute it and/or modify
  : it under the terms of the GNU General Public License as published by
@@ -28,18 +28,11 @@ declare namespace json="http://www.json.org";
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 import module namespace xqjson="http://xqilla.sourceforge.net/lib/xqjson";
-
 import module namespace exanore="https://www.exanore.com" at "eXanore.xqm";
 import module namespace exanoreParam="http://www.eXanore.com/param" at "params.xqm";
 
-(: Switch to JSON serialization :)
-(: [{ba}, {"ba2"}] :)
-(:declare option output:method "json";:)
-(:declare option output:media-type "application/json";:)
 declare option exist:serialize "method=text media-type=text/plain";
 
-declare variable $annots2json := element json {attribute type {'array'},for $file in fn:collection($exanoreParam:dataCollectionURI || '?=*.xml')[1] return element item { attribute type {'object'}, $file//json/*}};
-(: data_depr [1]//annotation return exanore:annot2json-xml3($annot):)
+let $annots := <json type="array">{for $json in xmldb:xcollection($exanoreParam:dataCollectionURI)/root() return $json}</json>
 
-xqjson:serialize-json($annots2json)
-(:$annots2json:)
+return xqjson:serialize-json($annots)
