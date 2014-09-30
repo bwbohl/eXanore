@@ -27,16 +27,12 @@ xquery version "3.0";
 (: import relevant eXist-db modules :)
 import module namespace request="http://exist-db.org/xquery/request";
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
-import module namespace system="http://exist-db.org/xquery/system";
 import module namespace config="http://www.edirom.de/tools/eXanore/config" at "config.xqm";
 import module namespace xqjson="http://xqilla.sourceforge.net/lib/xqjson";
 import module namespace exanoreParam="http://www.eXanore.com/param" at "params.xqm";
 
 (: declare namespaces :)
 declare namespace eX = "htp://www.edirom.de/ns/eXanore";
-declare namespace mei = "http://www.music-encoding.org/ns/mei";
-declare namespace expath="http://expath.org/ns/pkg";
-declare namespace repo="http://exist-db.org/xquery/repo";
 
 (: set serialization options :)
 declare option exist:serialize "method=text media-type=text/plain";
