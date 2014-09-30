@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package xmlns="http://expath.org/ns/pkg" name="http://www.edirom.de/tools/eXanore" abbrev="eXanore" version="0.1" spec="1.0">
-    <title>eXist-db Annotator Store API (eXanore)</title>
-    <dependency package="http://exist-db.org/apps/shared"/>
+    <title>eXanore - eXist-db Annotator Store API</title>
+    <dependency package="http://xqilla.sourceforge.net/pkg/xqjson" semver-min="0.1.6"/>
 </package>
