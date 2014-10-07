@@ -38,18 +38,19 @@ if ($exist:path eq '') then
     </dispatch>
     
 else if ($exist:path eq "/") then
-    (: forward root path to root.xql :)
+    (: get API info via forward to root.xql :)
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="modules/root.xql"/>
     </dispatch>
     
 else if ($exist:path eq "/annotations" and request:get-method() = 'GET') then
-    (: forward annotations-GET path to index.xql :)
+    (: get all annotations via index.xql :)
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="modules/index.xql"/>
     </dispatch>
 
 else if ($exist:path eq "/annotations" and request:get-method() = 'POST') then
+    (: create new annotation via create.xql :)
     let $json := util:base64-decode(request:get-data())
     return (:TODO set view chain and forward create + redirect with id returned form create :)
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -58,15 +59,18 @@ else if ($exist:path eq "/annotations" and request:get-method() = 'POST') then
         </forward>
     </dispatch>
 
-else if ($exist:path eq "/annotations/<id>" and request:get-method() = 'GET') then
-    (: forward root annotations-get to read.xql :)
-    (: TODO: handle id :)
+else if (starts-with($exist:path, "/annotations/eXanore_") and request:get-method() = 'GET') then
+    (: read specific annotation via read.xql :)
+    let $id := $exist:resource
+    return
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <redirect url="modules/read.xql"/>
+        <forward url="{$exist:controller}/modules/read.xql">
+            <add-parameter name="id" value="{$id}"/>
+        </forward>
     </dispatch>
 
-else if ($exist:path eq "/annotations/<id>" and request:get-method() = 'POST') then
-    (: forward root annotations-POST to create.xql :)
+else if ($exist:path eq "/annotations/<id>" and request:get-method() = 'PUT') then
+    (: forward modified annotation to update.xql :)
     (: TODO: handle id :)
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
         <redirect url="modules/update.xql"/>
