@@ -18,6 +18,11 @@ implements:
 * root request
 * index request
 * store request
+* 
+
+develop branch additional implementations
+-----------------------------------------
+
 * read request
 
 License
