@@ -7,6 +7,7 @@ References
 ----------
 
 http://annotatorjs.org/
+
 http://docs.annotatorjs.org/en/latest/storage.html
 
 
