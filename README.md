@@ -17,6 +17,7 @@ implements:
 * root request
 * index request
 * store request
+* read request
 
 License
 -------
