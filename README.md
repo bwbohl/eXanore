@@ -1,7 +1,7 @@
 eXanore
 =======
 
-Implementation of annotatorjs.org Store API as eXist-db library
+Implementation of annotatorjs.org Storage API as eXist-db library
 
 References
 ----------
