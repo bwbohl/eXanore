@@ -1,12 +1,11 @@
-
 (: eXanore - EXist-db ANnotator stORE API
  : Copyright Benjamin W. Bohl 2014.
  : bohl(at)edirom.de
  :
  : http://www.github.com/edirom/ediromSourceManager
- : 
+ :
  : ## Description & License
- : 
+ :
  : This defines parameters for eXanore
  :
  : This program is free software: you can redistribute it and/or modify
@@ -22,9 +21,10 @@
  : You should have received a copy of the GNU General Public License
  : along with this program.  If not, see <http://www.gnu.org/licenses/>.
  :)
- 
+
 xquery version "3.0";
 
 module namespace exanoreParam="http://www.eXanore.com/param";
 
-declare variable $exanoreParam:dataCollectionURI := 'eXanore_data/';
+declare variable $exanoreParam:dataCollectionURI := '/db/apps/eXanore/annotations/';
+declare variable $exanoreParam:JwtSecret := '';
