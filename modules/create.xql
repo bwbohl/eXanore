@@ -60,7 +60,7 @@ declare variable $expath-descriptor := config:expath-descriptor();
 declare variable $filename := $id  || ".xml";
 
 declare function eX:addRootAttributes($filename){
-  let $file := xmldb:document($exanoreParam:dataCollectionURI || $filename)
+  let $file := doc($exanoreParam:dataCollectionURI || $filename)
   let   $root := $file/json
   let   $content := $root/*
   return (

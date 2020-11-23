@@ -36,7 +36,7 @@ declare variable $filename := $id  || ".xml";
 
 declare function eX:addRootAttributes($filename){
   (: TODO?  xml:id="eXanore_39fc339cf058bd22176771b3e3187320" annotator_schema_version="v1.0" created="2011-05-24T18:52:08.036814" updated="2011-05-26T12:17:05.012544" :)
-  let $file := xmldb:document($exanoreParam:dataCollectionURI || $filename)
+  let $file := doc($exanoreParam:dataCollectionURI || $filename)
   let   $root := $file/json
   let   $content := $root/*
   return (
