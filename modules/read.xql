@@ -35,6 +35,6 @@ declare option exist:serialize "method=text media-type=text/plain";
 
 declare variable $id := request:get-parameter('id','');
 
-let $annot := xmldb:document($exanoreParam:dataCollectionURI || $id || '.xml')/root()/item
+let $annot := doc($exanoreParam:dataCollectionURI || $id || '.xml')/root()/item
 
 return xqjson:serialize-json($annot)
